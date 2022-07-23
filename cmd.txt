@@ -1,0 +1,22 @@
+pnpm create next-app blog-minimal -- --ts
+cd blog-minimal
+pnpm install -D tailwindcss postcss autoprefixer
+pnpx tailwindcss init -p
+Add the paths to all of your template files in your tailwind.config.js file.
+"
+module.exports = {
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+"
+Add the @tailwind directives for each of Tailwind’s layers to your ./styles/globals.css file.
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+pnpm run dev
