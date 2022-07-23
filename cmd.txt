@@ -1,3 +1,4 @@
+pnpm store prune // remove-cache
 pnpm create next-app blog-minimal -- --ts
 cd blog-minimal
 pnpm install -D tailwindcss postcss autoprefixer
