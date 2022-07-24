@@ -6,10 +6,9 @@ export const myFetcher = async (url: string) => {
             const data = await result.json()
             return data
         }
-        else {
-            throw new Error("Fetch failed with code: "
-                + result.statusText + " at: " + url)
-        }
+        throw new Error("Fetch failed with code: "
+            + result.statusText + " at: " + url)
+
     }
     catch (error: any) {
         return {

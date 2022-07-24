@@ -47,7 +47,7 @@ const Home: NextPage<IStaticProps> = ({ cards, error }) => {
               }
               {
                 cards.length === 0 &&
-                <>No data returned</>
+                <>No posts to show</>
               }
             </>
           }

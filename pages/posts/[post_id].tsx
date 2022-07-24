@@ -10,38 +10,10 @@ import { ParsedUrlQuery } from 'querystring'
 
 interface IStaticProps {
     card: CardProps,
-    error?: boolean
+    error?: boolean,
+    comments: Array<CommentProps>
 }
 
-let card: CardProps =
-{
-    "userId": 1,
-    "id": 1,
-    "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-    "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-}
-let comments: Array<CommentProps> = [{
-    "postId": 1,
-    "id": 1,
-    "name": "id labore ex et quam laborum",
-    "email": "Eliseo@gardner.biz",
-    "body": "laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium"
-},
-{
-    "postId": 1,
-    "id": 2,
-    "name": "quo vero reiciendis velit similique earum",
-    "email": "Jayne_Kuhic@sydney.com",
-    "body": "est natus enim nihil est dolore omnis voluptatem numquam\net omnis occaecati quod ullam at\nvoluptatem error expedita pariatur\nnihil sint nostrum voluptatem reiciendis et"
-},
-{
-    "postId": 1,
-    "id": 3,
-    "name": "odio adipisci rerum aut animi",
-    "email": "Nikita@garfield.biz",
-    "body": "quia molestiae reprehenderit quasi aspernatur\naut expedita occaecati aliquam eveniet laudantium\nomnis quibusdam delectus saepe quia accusamus maiores nam est\ncum et ducimus et vero voluptates excepturi deleniti ratione"
-}
-]
 
 interface IPageParams extends ParsedUrlQuery {
     post_id: string
@@ -57,24 +29,29 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
     const { post_id } = context.params as IPageParams;
-    const card = await myFetcher(`posts/${post_id}`)
+    const [card, comments] = await Promise.all(
+        [
+            myFetcher(`posts/${post_id}`),
+            myFetcher(`comments?postId=${post_id}`)
+        ]
+    )
     if ('error' in card) {
         return {
             redirect: {
-                destination: '/posts/1', permanent: false,
+                destination: '/', permanent: false,
             }
         }
     }
     else {
         return {
-            props: { card }
+            props: { card, comments }
         }
     }
 }
 
-const Home: NextPage<IStaticProps> = ({card, error}) => {
-    const router = useRouter()
-  
+const Home: NextPage<IStaticProps> = ({ card, error, comments }) => {
+    console.log({comments})
+    console.log({card})
     return (
         <MainLayout>
             <header className="">
@@ -111,6 +88,10 @@ const Home: NextPage<IStaticProps> = ({card, error}) => {
                                     <Comment key={value.id} {...value} />
                                 )
                             })
+                        }
+                        {
+                            comments.length === 0 &&
+                            <>No comments to show</>
                         }
                     </div>
                 </div>
