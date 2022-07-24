@@ -7,18 +7,38 @@ export type CardProps = {
     id: number,
     userId: number
 }
-const Card = (props: CardProps) => {
-    return (
-        <Link href={`posts/${props.id}`}>
-            <a target="_blank">
-                <div className='rounded-lg shadow-gray-300 shadow-lg hover:shadow-gray-400 ring-1 py-12 px-10 collapse ring-orange-500'>
-                    <h1 className='mb-4 text-3xl font-bold uppercase'> {props.title} </h1>
-                    <p className='mb-4'> {props.body} </p>
-                    <span className='text-red-500 underline underline-offset-4'> Click to view post </span>
 
-                </div>
-            </a>
-        </Link>
+type ComponentProps = CardProps & {
+    allPostsPage?: boolean
+}
+
+const CardBody = (props: ComponentProps) => {
+    return (
+        <>
+            <div className='rounded-lg shadow-gray-300 shadow-lg hover:shadow-gray-400 ring-1 py-12 px-10 collapse ring-orange-500'>
+                <h1 className='mb-4 text-lg font-bold'> {props.title} </h1>
+                <p className='mb-4'> {props.body} </p>
+            </div>
+        </>
+
+    )
+}
+
+
+const Card = (props: ComponentProps) => {
+    return (
+        <>
+            {props.allPostsPage ?
+                <Link href={`posts/${props.id}`}>
+                    <a target="_blank">
+                        <CardBody {...props} />
+                    </a>
+                </Link>
+                :
+                <CardBody {...props} />
+            }
+        </>
+
     )
 }
 

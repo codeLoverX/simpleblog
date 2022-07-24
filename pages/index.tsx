@@ -1,7 +1,9 @@
-import type { NextPage } from 'next'
+import type { NextPage, GetStaticProps } from 'next'
 import Navbar from '../components/allPostPage/Navbar'
 import Card, { CardProps } from '../components/shared/Card'
 import MainLayout from '../layouts/MainLayout'
+import useSWR from 'swr'
+import { } from 'next'
 
 let cards: Array<CardProps> = [
   {
@@ -24,19 +26,27 @@ let cards: Array<CardProps> = [
   },
 ]
 
+const getStaticProps: GetStaticProps = async (context) => {
+  const res = await fetch('https://.../posts')
+  const posts = await res.json()
+  return {
+    props: { cards }
+  }
+}
+
 const Home: NextPage = () => {
   return (
     <MainLayout>
-      <header className="container">
+      <header>
         <Navbar />
       </header>
-      <main className="container px-12 md:px-48">
+      <main className="px-12 lg:px-48">
         <h1 className='text-red-600 text-2xl md:text-3xl mb-4'>ALL POSTS</h1>
         <div className='grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
           {
             cards.map((value: CardProps) => {
               return (
-                <Card key={value.id} {...value} />
+                <Card key={value.id} allPostsPage={true} {...value} />
               )
             })
           }
