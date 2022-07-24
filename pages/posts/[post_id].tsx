@@ -1,10 +1,17 @@
-import type { NextPage } from 'next'
+import type { NextPage, GetStaticProps, GetStaticPaths } from 'next'
 import Navbar from '../../components/allPostPage/Navbar'
 import Card, { CardProps } from '../../components/shared/Card'
 import MainLayout from '../../layouts/MainLayout'
 import { useRouter } from 'next/router'
 import Comment, { CommentProps } from '../../components/[post]/Comment'
 import { useState } from 'react'
+import { myFetcher } from '../../utilities/fetcher'
+import { ParsedUrlQuery } from 'querystring'
+
+interface IStaticProps {
+    card: CardProps,
+    error?: boolean
+}
 
 let card: CardProps =
 {
@@ -36,10 +43,38 @@ let comments: Array<CommentProps> = [{
 }
 ]
 
-const Home: NextPage = () => {
+interface IPageParams extends ParsedUrlQuery {
+    post_id: string
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+
+    return {
+        paths: [], //indicates that no page needs be created at build time
+        fallback: 'blocking' //indicates the type of fallback
+    }
+}
+
+export const getStaticProps: GetStaticProps = async (context) => {
+    const { post_id } = context.params as IPageParams;
+    const card = await myFetcher(`posts/${post_id}`)
+    if ('error' in card) {
+        return {
+            redirect: {
+                destination: '/posts/1', permanent: false,
+            }
+        }
+    }
+    else {
+        return {
+            props: { card }
+        }
+    }
+}
+
+const Home: NextPage<IStaticProps> = ({card, error}) => {
     const router = useRouter()
-    const { post_id } = router.query
-    let [search, setSearch] = useState('')
+  
     return (
         <MainLayout>
             <header className="">
