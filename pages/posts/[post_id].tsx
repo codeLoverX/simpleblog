@@ -2,9 +2,8 @@ import type { NextPage, GetStaticProps, GetStaticPaths } from 'next'
 import Navbar from '../../components/allPostPage/Navbar'
 import Card, { CardProps } from '../../components/shared/Card'
 import MainLayout from '../../layouts/MainLayout'
-import { useRouter } from 'next/router'
 import Comment, { CommentProps } from '../../components/[post]/Comment'
-import { useState } from 'react'
+import { FormEvent, useState, useEffect, SyntheticEvent, useMemo } from 'react'
 import { myFetcher } from '../../utilities/fetcher'
 import { ParsedUrlQuery } from 'querystring'
 
@@ -12,6 +11,11 @@ interface IStaticProps {
     card: CardProps,
     error?: boolean,
     comments: Array<CommentProps>
+}
+
+interface IState {
+    filterBy: string,
+    filterKey: 'name' | 'email' | 'body'
 }
 
 
@@ -49,9 +53,26 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
 }
 
-const Home: NextPage<IStaticProps> = ({ card, error, comments }) => {
-    console.log({comments})
-    console.log({card})
+const Home: NextPage<IStaticProps, IState> = ({ card, error, comments }) => {
+    const [searchFilter, setSearchFilter] = useState({
+        filterBy: '', filterKey: ''
+    })
+    function changeSearchFilter(event: SyntheticEvent) {
+        event.preventDefault()
+        const target = event.target as typeof event.target & {
+            filterBy: { value: string };
+            filterKey: { value: string };
+        };
+        const filterBy = target.filterBy.value;
+        const filterKey = target.filterKey.value;
+        setSearchFilter({
+            filterBy, filterKey
+        })
+    }
+    const customComments = useMemo(() => {
+        if (searchFilter.filterKey === '') return [...comments]
+        else return []
+    }, [searchFilter])
     return (
         <MainLayout>
             <header className="">
@@ -63,34 +84,36 @@ const Home: NextPage<IStaticProps> = ({ card, error, comments }) => {
                     <div className='align-center mt-8 mb-6'>
                         <h1 className='text-red-600 text-2xl lg:text-3xl '>Latest comments</h1>
                         <div className='mt-4'>
-                            <label className='leading-10'>Search by...</label>
-                            <select name="searchOption" id="searchOption" className='input-primary mx-2'>
-                                <option value="name">Name</option>
-                                <option value="email">Email</option>
-                                <option value="body">Body</option>
-                            </select>
-                            <input type="search"
-                                id="default-search"
-                                className="input-primary mr-2"
-                                placeholder="Search comments..."
-                                required />
-                            <button
-                                type="submit"
-                                className="btn-primary">
-                                Search
-                            </button>
+                            <form onSubmit={(event) => { changeSearchFilter(event) }}>
+                                <label className='leading-10'>Search by...</label>
+                                <select name="filterBy" id="searchOption" className='input-primary mx-2'>
+                                    <option value="name">Name</option>
+                                    <option value="email">Email</option>
+                                    <option value="body">Body</option>
+                                </select>
+                                <input type="filterKey"
+                                    id="default-search"
+                                    className="input-primary mr-2"
+                                    placeholder="Search comments..."
+                                    required />
+                                <button
+                                    type="submit"
+                                    className="btn-primary">
+                                    Search
+                                </button>
+                            </form>
                         </div>
                     </div>
                     <div className='pl-3 border-orange-300'>
                         {
-                            comments.map((value: CommentProps) => {
+                            customComments.map((value: CommentProps) => {
                                 return (
                                     <Comment key={value.id} {...value} />
                                 )
                             })
                         }
                         {
-                            comments.length === 0 &&
+                            customComments.length === 0 &&
                             <>No comments to show</>
                         }
                     </div>

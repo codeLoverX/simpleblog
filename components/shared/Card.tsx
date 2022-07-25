@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { memo } from 'react'
 
 export type CardProps = {
     title: string,
@@ -25,7 +26,7 @@ const CardBody = (props: ComponentProps) => {
 }
 
 
-const Card = (props: ComponentProps) => {
+const Card = memo((props: ComponentProps) => {
     return (
         <>
             {props.allPostsPage ?
@@ -40,7 +41,7 @@ const Card = (props: ComponentProps) => {
         </>
 
     )
-}
+})
 
 export default Card
 
