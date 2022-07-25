@@ -1,9 +1,1 @@
-Run by:
-<br>
-<br>
-npm install -g pnpm
-<br>
-pnpm i
-<br>
-pnpm run dev
-<br>
+
