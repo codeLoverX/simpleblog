@@ -53,20 +53,24 @@ export const getStaticProps: GetStaticProps = async (context) => {
     }
 }
 
+interface FormElements extends HTMLFormControlsCollection {
+    filterBy: HTMLInputElement, filterKey: HTMLInputElement
+}
+
+interface YourFormElement extends HTMLFormElement {
+   readonly elements: FormElements
+}
+
 const Home: NextPage<IStaticProps, IState> = ({ card, error, comments }) => {
     const [searchFilter, setSearchFilter] = useState({
         filterBy: '', filterKey: ''
     })
-    function changeSearchFilter(event: SyntheticEvent) {
+    console.log({searchFilter})
+    function changeSearchFilter(event: FormEvent<YourFormElement>) {
         event.preventDefault()
-        const target = event.target as typeof event.target & {
-            filterBy: { value: string };
-            filterKey: { value: string };
-        };
-        const filterBy = target.filterBy.value;
-        const filterKey = target.filterKey.value;
+        const formElements = event.currentTarget.elements
         setSearchFilter({
-            filterBy, filterKey
+            filterBy: formElements.filterBy.value, filterKey: formElements.filterKey.value
         })
     }
     const customComments = useMemo(() => {
@@ -91,9 +95,10 @@ const Home: NextPage<IStaticProps, IState> = ({ card, error, comments }) => {
                                     <option value="email">Email</option>
                                     <option value="body">Body</option>
                                 </select>
-                                <input type="filterKey"
+                                <input type="input"
                                     id="default-search"
                                     className="input-primary mr-2"
+                                    name="filterKey"
                                     placeholder="Search comments..."
                                     required />
                                 <button
