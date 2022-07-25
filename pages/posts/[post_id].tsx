@@ -74,20 +74,18 @@ const Home: NextPage<IStaticProps, IState> = ({ card, error, comments }) => {
         })
     }
     const customComments: Array<CommentProps> = useMemo(() => {
-        let {filterKey, searchString} = searchFilter
+        let { filterKey, searchString } = searchFilter
         searchString = searchString.toLowerCase()
         if (searchFilter.searchString === '') return [...comments]
         else {
             return comments.filter((comment) => {
                 let commentPart = (comment as any)[filterKey] as string
                 commentPart = commentPart.toLowerCase()
-                let isIncludes = commentPart.includes(searchString)
-                console.log({commentPart, filterKey, searchString, isIncludes})
-                return isIncludes
+                return commentPart.includes(searchString)
             })
         }
     }, [searchFilter])
-    
+
     return (
         <MainLayout>
             <header className="">
