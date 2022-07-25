@@ -63,7 +63,7 @@ interface YourFormElement extends HTMLFormElement {
 
 const Home: NextPage<IStaticProps, IState> = ({ card, error, comments }) => {
     const [searchFilter, setSearchFilter] = useState({
-        searchString: '', filterKey: ''
+        searchString: '', filterKey: 'body'
     })
     console.log({ searchFilter })
     function changeSearchFilter(event: FormEvent<YourFormElement>) {
@@ -73,12 +73,17 @@ const Home: NextPage<IStaticProps, IState> = ({ card, error, comments }) => {
             searchString: formElements.searchString.value, filterKey: formElements.filterKey.value
         })
     }
-    const customComments = useMemo(() => {
-        if (searchFilter.filterKey === '') return [...comments]
+    const customComments: Array<CommentProps> = useMemo(() => {
+        let {filterKey, searchString} = searchFilter
+        searchString = searchString.toLowerCase()
+        if (searchFilter.searchString === '') return [...comments]
         else {
-            comments.filter((comment) => {
-                let commentPart = (comment as any)[searchFilter.filterKey] as string
-                return commentPart.includes(searchFilter.searchString)
+            return comments.filter((comment) => {
+                let commentPart = (comment as any)[filterKey] as string
+                commentPart = commentPart.toLowerCase()
+                let isIncludes = commentPart.includes(searchString)
+                console.log({commentPart, filterKey, searchString, isIncludes})
+                return isIncludes
             })
         }
     }, [searchFilter])
@@ -96,7 +101,7 @@ const Home: NextPage<IStaticProps, IState> = ({ card, error, comments }) => {
                         <div className='mt-4'>
                             <form onSubmit={(event) => { changeSearchFilter(event as FormEvent<YourFormElement>) }}>
                                 <label className='leading-10'>Search by...</label>
-                                <select name="searchString" id="searchOption" className='input-primary mx-2'>
+                                <select name="filterKey" id="searchOption" className='input-primary mx-2'>
                                     <option value="name">Name</option>
                                     <option value="email">Email</option>
                                     <option value="body">Body</option>
@@ -104,7 +109,7 @@ const Home: NextPage<IStaticProps, IState> = ({ card, error, comments }) => {
                                 <input type="input"
                                     id="default-search"
                                     className="input-primary mr-2"
-                                    name="filterKey"
+                                    name="searchString"
                                     placeholder="Search comments..."
                                     required />
                                 <button
@@ -117,14 +122,14 @@ const Home: NextPage<IStaticProps, IState> = ({ card, error, comments }) => {
                     </div>
                     <div className='pl-3 border-orange-300'>
                         {
-                            customComments.map((value: CommentProps) => {
+                            customComments?.map((value: CommentProps) => {
                                 return (
                                     <Comment key={value.id} {...value} />
                                 )
                             })
                         }
                         {
-                            customComments.length === 0 &&
+                            customComments?.length === 0 &&
                             <>No comments to show</>
                         }
                     </div>
