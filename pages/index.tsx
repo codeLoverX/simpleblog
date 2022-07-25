@@ -33,7 +33,7 @@ const Home: NextPage<IStaticProps> = ({ cards, error }) => {
       </header>
       <main className="px-12 lg:px-48">
         <h1 className='text-red-600 text-2xl md:text-3xl mb-4'>ALL POSTS</h1>
-        <div className='grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3'>
+        <div className='grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3'>
           {error ?
             <>Error fetching</>
             :
