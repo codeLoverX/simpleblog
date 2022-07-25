@@ -14,7 +14,7 @@ interface IStaticProps {
 }
 
 interface IState {
-    filterBy: string,
+    searchString: string,
     filterKey: 'name' | 'email' | 'body'
 }
 
@@ -54,29 +54,35 @@ export const getStaticProps: GetStaticProps = async (context) => {
 }
 
 interface FormElements extends HTMLFormControlsCollection {
-    filterBy: HTMLInputElement, filterKey: HTMLInputElement
+    searchString: HTMLInputElement, filterKey: HTMLInputElement
 }
 
 interface YourFormElement extends HTMLFormElement {
-   readonly elements: FormElements
+    readonly elements: FormElements
 }
 
 const Home: NextPage<IStaticProps, IState> = ({ card, error, comments }) => {
     const [searchFilter, setSearchFilter] = useState({
-        filterBy: '', filterKey: ''
+        searchString: '', filterKey: ''
     })
-    console.log({searchFilter})
+    console.log({ searchFilter })
     function changeSearchFilter(event: FormEvent<YourFormElement>) {
         event.preventDefault()
         const formElements = event.currentTarget.elements
         setSearchFilter({
-            filterBy: formElements.filterBy.value, filterKey: formElements.filterKey.value
+            searchString: formElements.searchString.value, filterKey: formElements.filterKey.value
         })
     }
     const customComments = useMemo(() => {
         if (searchFilter.filterKey === '') return [...comments]
-        else return []
+        else {
+            comments.filter((comment) => {
+                let commentPart = (comment as any)[searchFilter.filterKey] as string
+                return commentPart.includes(searchFilter.searchString)
+            })
+        }
     }, [searchFilter])
+    
     return (
         <MainLayout>
             <header className="">
@@ -88,9 +94,9 @@ const Home: NextPage<IStaticProps, IState> = ({ card, error, comments }) => {
                     <div className='align-center mt-8 mb-6'>
                         <h1 className='text-red-600 text-2xl lg:text-3xl '>Latest comments</h1>
                         <div className='mt-4'>
-                            <form onSubmit={(event) => { changeSearchFilter(event) }}>
+                            <form onSubmit={(event) => { changeSearchFilter(event as FormEvent<YourFormElement>) }}>
                                 <label className='leading-10'>Search by...</label>
-                                <select name="filterBy" id="searchOption" className='input-primary mx-2'>
+                                <select name="searchString" id="searchOption" className='input-primary mx-2'>
                                     <option value="name">Name</option>
                                     <option value="email">Email</option>
                                     <option value="body">Body</option>
