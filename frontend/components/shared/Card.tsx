@@ -24,6 +24,7 @@ const CardBody = (props: ComponentProps) => {
                     </a>
                 </object>
             }
+            
         </div>
 
     )
