@@ -1,0 +1,6 @@
+pnpm store prune // remove-cache
+nest new backend -p pnpm
+cd backend
+pnpm run start
+pnpm i @nestjs/graphql @nestjs/apollo graphql apollo-server-express
+nest g service manager.service.ts
