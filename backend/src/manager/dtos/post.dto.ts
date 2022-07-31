@@ -1,32 +1,34 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { IsString, IsNumber, IsNotEmpty } from 'class-validator';
+import {
+    IsString, IsNumber, IsNotEmpty
+} from 'class-validator';
+import { Comment } from './comment.dto';
 
 @ObjectType()
-export class CreatePost{
+export class Post {
+    @IsNumber()
+    @IsNotEmpty()
+    @Field(type => Int)
+    userId: number
 
+    @Field(type => Int)
     @IsNumber()
     @IsNotEmpty()
-    @Field(type => Int)
-    postId: number
-    
-    @IsNumber()
-    @IsNotEmpty()
-    @Field(type => Int)
     id: number
 
     @Field()
     @IsString()
     @IsNotEmpty()
-    name: string
-    
-    @Field()
-    @IsString()
-    @IsNotEmpty()
-    email: string
-    
+    title: string
+
     @Field()
     @IsString()
     @IsNotEmpty()
     body: string
+
+
+    // @Field(() => [Comment], { nullable: false })
+    // @IsArray()
+    // comments?: [Comment]
 }
 
