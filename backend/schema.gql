@@ -2,13 +2,23 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Comment {
+  postId: Int!
+  id: Int!
+  name: String!
+  email: String!
+  body: String!
+}
+
 type Post {
   userId: Int!
   id: Int!
   title: String!
   body: String!
+  comments: [Comment!]!
 }
 
 type Query {
-  post: [Post!]!
+  posts: [Post!]!
+  post(post_id: Int!): Post!
 }

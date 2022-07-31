@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
-    IsString, IsNumber, IsNotEmpty
+    IsString, IsNumber, IsNotEmpty, IsArray
 } from 'class-validator';
 import { Comment } from './comment.dto';
 
@@ -27,8 +27,8 @@ export class Post {
     body: string
 
 
-    // @Field(() => [Comment], { nullable: false })
-    // @IsArray()
-    // comments?: [Comment]
+    @Field(() => [Comment], { nullable: false })
+    @IsArray()
+    comments: [Comment]
 }
 
