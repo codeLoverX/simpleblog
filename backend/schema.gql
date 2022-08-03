@@ -21,4 +21,5 @@ type Post {
 type Query {
   posts(skip: Float = 0, take: Float = 2): [Post!]!
   post(post_id: Int!): Post!
+  comments(filterKey: String!, searchString: String!): [Comment!]!
 }

@@ -3,7 +3,7 @@ import { Field, Int, ArgsType, InputType } from '@nestjs/graphql'
 import { Max, Min, IsOptional } from 'class-validator'
 
 @ArgsType()
-export class FetchUsersArgs {
+export class PaginateArgs {
   @Field({ nullable: false, defaultValue: 0 })
   @Min(0)
   @IsOptional()
