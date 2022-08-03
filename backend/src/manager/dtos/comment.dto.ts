@@ -30,7 +30,4 @@ export class Comment {
     @IsString()
     // @IsNotEmpty()
     body: string
-
-
-
 }

@@ -4,3 +4,4 @@ cd backend
 pnpm run start
 pnpm i @nestjs/graphql @nestjs/apollo graphql apollo-server-express
 nest g service manager.service.ts
+pnpm i --save @nestjs/elasticsearch @elastic/elasticsearch

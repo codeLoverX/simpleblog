@@ -15,10 +15,10 @@ type Post {
   id: Int!
   title: String!
   body: String!
-  comments: [Comment!]!
+  comments(skip: Float = 0, take: Float = 2): [Comment!]!
 }
 
 type Query {
-  posts: [Post!]!
+  posts(skip: Float = 0, take: Float = 2): [Post!]!
   post(post_id: Int!): Post!
 }
