@@ -1,4 +1,4 @@
-# simpleblog
+# comments-manager
 
 <h4> npm install -g pnpm </h4>
 <h1> To view frontend </h1>
