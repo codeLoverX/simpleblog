@@ -15,11 +15,11 @@ type Post {
   id: Int!
   title: String!
   body: String!
-  comments(skip: Float = 0, take: Float = 2): [Comment!]!
+  comments(skip: Float = 0, take: Float = 5): [Comment!]!
 }
 
 type Query {
-  posts(skip: Float = 0, take: Float = 2): [Post!]!
+  posts(skip: Float = 0, take: Float = 5): [Post!]!
   post(post_id: Int!): Post!
   comments(filterKey: String!, searchString: String!): [Comment!]!
 }

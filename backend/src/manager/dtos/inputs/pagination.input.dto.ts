@@ -9,7 +9,7 @@ export class PaginateArgs {
   @IsOptional()
   skip: number
 
-  @Field({ nullable: false, defaultValue: 2 })
+  @Field({ nullable: false, defaultValue: 5 })
   @Min(1)
   @Max(50)
   take: number
